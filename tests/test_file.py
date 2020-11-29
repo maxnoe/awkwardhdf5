@@ -53,3 +53,13 @@ def test_keys(simple_dataset_file):
     f = File(str(simple_dataset_file))
 
     assert f.keys() == ["group"]
+
+
+def test_dataset(simple_dataset_file):
+    from awkwardhdf5 import File
+
+    f = File(str(simple_dataset_file))
+
+    dataset = f["group"]["data"]
+    assert dataset.ndim == 2
+    assert dataset.shape == [10, 100]

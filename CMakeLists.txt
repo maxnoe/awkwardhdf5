@@ -12,13 +12,24 @@ add_subdirectory(vendor/pybind11)
 
 pybind11_add_module(
     awkwardhdf5 src/awkwardhdf5.cpp
-    src/Location.cpp src/Object.cpp 
+    src/Location.cpp src/Object.cpp
     src/Dataset.cpp src/File.cpp src/Group.cpp
 )
 target_link_libraries(awkwardhdf5 PUBLIC hdf5::hdf5 hdf5::hdf5_cpp)
+target_include_directories(awkwardhdf5 PRIVATE include)
 
+
+add_executable(create_vlen cli/create_vlen.cpp)
+target_link_libraries(create_vlen PUBLIC hdf5::hdf5 hdf5::hdf5_cpp)
+set_target_properties(create_vlen PROPERTIES CXX_STANDARD 14)
+set_target_properties(create_vlen PROPERTIES CXX_STANDARD_REQUIRED TRUE)
+
+add_executable(create_compound_vlen cli/create_compound_vlen.cpp)
+target_link_libraries(create_compound_vlen PUBLIC hdf5::hdf5 hdf5::hdf5_cpp)
+set_target_properties(create_compound_vlen PROPERTIES CXX_STANDARD 14)
+set_target_properties(create_compound_vlen PROPERTIES CXX_STANDARD_REQUIRED TRUE)
 
 add_executable(readhdf cli/readhdf.cpp)
 target_link_libraries(readhdf PUBLIC hdf5::hdf5 hdf5::hdf5_cpp)
-set_target_properties(PROPERTIES CXX_STANDARD 14)
-set_target_properties(PROPERTIES CXX_STANDARD_REQUIRED TRUE)
+set_target_properties(readhdf PROPERTIES CXX_STANDARD 14)
+set_target_properties(readhdf PROPERTIES CXX_STANDARD_REQUIRED TRUE)
