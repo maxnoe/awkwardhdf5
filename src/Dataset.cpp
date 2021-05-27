@@ -49,13 +49,43 @@ H5::DataType get_mem_type(const H5::DataSet& self) {
     return H5::PredType::C_S1;
 }
 
+std::string to_string(H5T_order_t order) {
+    std::string s;
+    switch (order) {
+        case H5T_ORDER_LE: s = "<"; break;
+        case H5T_ORDER_BE: s = ">"; break;
+        case H5T_ORDER_VAX: s = "v"; break;
+        case H5T_ORDER_MIXED: s = "m"; break;
+        case H5T_ORDER_NONE: s = "|"; break;
+        case H5T_ORDER_ERROR: throw std::runtime_error("Found H5T_ORDER_ERROR in to_string(order)");
+    }
+    return s;
+}
+
+std::string to_string(H5T_sign_t sign) {
+    std::string s;
+    switch (sign) {
+        case H5T_SGN_2: s = ""; break;
+        case H5T_SGN_NONE: s = "u"; break;
+        case H5T_SGN_ERROR: throw std::runtime_error("Found H5T_SGN_ERROR in to_string(sign)");
+        case H5T_NSGN: throw std::runtime_error("Found H5T_NSGN with unknown meaning in to_string(sign)");
+    }
+    return s;
+}
+
+std::string to_string(const H5::IntType& int_type) {
+    return to_string(int_type.getOrder())
+        + to_string(int_type.getSign())
+        + "int"
+        + std::to_string(int_type.getSize() * 8);
+}
+
 std::string memtype(const H5::DataSet& self) {
     H5T_class_t type = self.getTypeClass();
 
     switch(type) {
         case H5T_INTEGER: {
-            H5::IntType int_type = self.getIntType();
-            return "int" + std::to_string(int_type.getSize() * 8);
+            return to_string(self.getIntType());
         }
         case H5T_FLOAT: {
             H5::FloatType float_type = self.getFloatType();
